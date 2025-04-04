@@ -1,7 +1,34 @@
 import { useState } from 'react';
 import Canvas from './components/Canvas';
 import sampleImg from './sample.png';
-import LayerPanel from './components/LayerPanel';
+import Layers from './components/Layers';
+
+import styled from '@emotion/styled'
+
+const AppContainer = styled.div`
+  background: #333;
+  color: #fff;
+  width: 100vw;
+  display: flex;
+  position: relative;
+  ${'' /* border: 2px solid brown; */}
+`;
+const AddImageButton = styled.button`
+  background: black;
+  color: white;
+  width: 5em;
+  height: auto;
+  ${'' /* border: 1px solid green; */}
+`;
+
+const SidePanel = styled.div`
+  ${'' /* border: 1px solid blue; */}
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+`
+
 
 function App() {
   const [selectedId, setSelectedId] = useState(null);
@@ -57,30 +84,35 @@ function App() {
 
 
   return (
-    <div style={{ width: '100vw' }}>
-      <button onClick={addImage}>Add Image</button>
+    <AppContainer>
       <Canvas images={images} onUpdate={updateImage} changeZIndex={changeZIndex} />
-      <LayerPanel
-        images={images}
-        selectedId={selectedId}
-        onSelect={(id) => setSelectedId(id)}
-        onMove={(id, dir) => {
-          setImages((prev) => {
-            const maxZ = Math.max(...prev.map(i => i.zIndex));
-            return prev.map(img => {
-              if (img.id === id) {
-                let newZ = dir === 'up' ? img.zIndex + 1 : Math.max(1, img.zIndex - 1);
-                return { ...img, zIndex: Math.min(newZ, maxZ + 1) };
-              }
-              return img;
+      <SidePanel>
+        <Layers
+          images={images}
+          selectedId={selectedId}
+          onSelect={(id) => setSelectedId(id)}
+          onMove={(id, dir) => {
+            setImages((prev) => {
+              const maxZ = Math.max(...prev.map(i => i.zIndex));
+              return prev.map(img => {
+                if (img.id === id) {
+                  let newZ = dir === 'up' ? img.zIndex + 1 : Math.max(1, img.zIndex - 1);
+                  return { ...img, zIndex: Math.min(newZ, maxZ + 1) };
+                }
+                return img;
+              });
             });
-          });
-        }}
-        onDelete={(id) => {
-          setImages(prev => prev.filter(img => img.id !== id));
-          if (selectedId === id) setSelectedId(null);
-        }}
-      />    </div>
+          }}
+          onDelete={(id) => {
+            setImages(prev => prev.filter(img => img.id !== id));
+            if (selectedId === id) setSelectedId(null);
+          }}
+        />
+        <AddImageButton onClick={addImage}>Add</AddImageButton>
+
+      </SidePanel>
+
+    </AppContainer>
   );
 }
 

@@ -208,8 +208,8 @@ const DraggableImage = ({ image, onUpdate, changeZIndex }) => {
           }}
         />
       ))}
-      <button onClick={() => changeZIndex(id, 'up')}>Bring Forward</button>
-      <button onClick={() => changeZIndex(id, 'down')}>Send Backward</button>
+      {/* <button onClick={() => changeZIndex(id, 'up')}>Bring Forward</button>
+      <button onClick={() => changeZIndex(id, 'down')}>Send Backward</button> */}
 
     </div>
   );

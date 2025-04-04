@@ -9,7 +9,6 @@ const Canvas = ({ images, onUpdate, changeZIndex }) => {
         height: '100vh',
         background: '#f4f4f4',
         overflow: 'hidden',
-        border: '1px solid red'
       }}
     >
       {images.map(img => (

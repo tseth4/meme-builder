@@ -1,28 +1,30 @@
-import './LayerPanel.css';
+// import './LayerPanel.css';
+import { LayerPanel, LayerItem, LayerPreview, LayerActions } from './LayerPanel.styles';
 
-const LayerPanel = ({ images, selectedId, onSelect, onMove, onDelete }) => {
+
+const Layers = ({ images, selectedId, onSelect, onMove, onDelete }) => {
   const sorted = [...images].sort((a, b) => b.zIndex - a.zIndex); // Top to bottom
 
   return (
-    <div className="layer-panel">
+    <LayerPanel>
       <h4>Layers</h4>
       {sorted.map((img) => (
-        <div
+        <LayerItem
           key={img.id}
-          className={`layer-item ${img.id === selectedId ? 'active' : ''}`}
+          active={img.id === selectedId}
           onClick={() => onSelect(img.id)}
         >
-          <div className="layer-preview" style={{ backgroundImage: `url(${img.src})` }} />
+          <LayerPreview style={{ backgroundImage: `url(${img.src})` }} />
           <span>Layer {img.zIndex}</span>
-          <div className="layer-actions">
+          <LayerActions>
             <button onClick={(e) => { e.stopPropagation(); onMove(img.id, 'up'); }}>⬆️</button>
             <button onClick={(e) => { e.stopPropagation(); onMove(img.id, 'down'); }}>⬇️</button>
             <button onClick={(e) => { e.stopPropagation(); onDelete(img.id); }}>🗑️</button>
-          </div>
-        </div>
+          </LayerActions>
+        </LayerItem>
       ))}
-    </div>
+    </LayerPanel>
   );
 };
 
-export default LayerPanel;
+export default Layers;
