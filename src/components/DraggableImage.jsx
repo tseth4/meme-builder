@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DraggableImage = ({ image, onUpdate }) => {
-  const { id, src, x, y, width, height } = image;
+const DraggableImage = ({ image, onUpdate, changeZIndex }) => {
+  const { id, src, x, y, width, height, zIndex } = image;
   const [resizing, setResizing] = useState(false);
   const [dragging, setDragging] = useState(false);
 
@@ -82,16 +82,6 @@ const DraggableImage = ({ image, onUpdate }) => {
     setDragging(true);
     offset.current = {
       x: e.clientX - x,  // distance from top-left of image
-      y: e.clientY - y,
-    };
-  };
-
-
-  const handleMouseDown = (e) => {
-    console.log("mousedown")
-    setDragging(true);
-    offset.current = {
-      x: e.clientX - x,
       y: e.clientY - y,
     };
   };
@@ -199,6 +189,7 @@ const DraggableImage = ({ image, onUpdate }) => {
         top: y,
         width,
         height,
+        zIndex,
         backgroundImage: `url(${src})`,
         backgroundSize: 'cover',
         border: '1px solid #ccc',
@@ -217,7 +208,8 @@ const DraggableImage = ({ image, onUpdate }) => {
           }}
         />
       ))}
-
+      <button onClick={() => changeZIndex(id, 'up')}>Bring Forward</button>
+      <button onClick={() => changeZIndex(id, 'down')}>Send Backward</button>
 
     </div>
   );

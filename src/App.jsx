@@ -11,6 +11,7 @@ function App() {
       y: 100,
       width: 200,
       height: 200,
+      zIndex: 1
     },
   ]);
 
@@ -31,14 +32,32 @@ function App() {
         y: 50,
         width: 200,
         height: 200,
+        zIndex: 1
       },
     ]);
   };
 
+  const changeZIndex = (id, direction) => {
+    setImages(prev =>
+      prev.map(img => {
+        if (img.id === id) {
+          return {
+            ...img,
+            zIndex: direction === 'up'
+              ? img.zIndex + 1
+              : Math.max(1, img.zIndex - 1),
+          };
+        }
+        return img;
+      })
+    );
+  };
+
+
   return (
     <div style={{ width: '100vw' }}>
       <button onClick={addImage}>Add Image</button>
-      <Canvas images={images} onUpdate={updateImage} />
+      <Canvas images={images} onUpdate={updateImage} changeZIndex={changeZIndex} />
     </div>
   );
 }
