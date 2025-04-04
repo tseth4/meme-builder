@@ -8,7 +8,9 @@ const DraggableImage = ({ image, onUpdate }) => {
 
   useEffect(() => {
     const handleMouseMove = (e) => {
+      // handleResizeDown
       if (resizing) {
+        // delta is the actual change in x
         const deltaX = e.clientX - offset.current.x;
         const deltaY = e.clientY - offset.current.y;
 
@@ -47,14 +49,17 @@ const DraggableImage = ({ image, onUpdate }) => {
 
   const handleResizeDown = (e) => {
     e.stopPropagation();
+
     setResizing(true);
     offset.current = {
       x: e.clientX,
       y: e.clientY,
     };
+
   };
 
   const handleMouseDown = (e) => {
+    console.log("mousedown")
     setDragging(true);
     offset.current = {
       x: e.clientX - x,
@@ -75,6 +80,7 @@ const DraggableImage = ({ image, onUpdate }) => {
         border: '1px solid #ccc',
         cursor: dragging ? 'grabbing' : 'grab',
       }}
+      // sets the initial offset
       onMouseDown={handleMouseDown}
     >
       <div
@@ -85,7 +91,7 @@ const DraggableImage = ({ image, onUpdate }) => {
           right: 0,
           width: 15,
           height: 15,
-          background: '#000',
+          background: 'red',
           cursor: 'nwse-resize',
         }}
       />
