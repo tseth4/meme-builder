@@ -75,6 +75,7 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
 
   const handleDragStart = (e) => {
     // Prevent conflict with resizing
+    e.stopPropagation();
     onSelect(image.id)
     if (resizing) return;
 

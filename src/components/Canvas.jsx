@@ -10,6 +10,7 @@ const Canvas = ({ images, onUpdate, changeZIndex, onSelect }) => {
         background: '#f4f4f4',
         overflow: 'hidden',
       }}
+      onMouseDown={() => onSelect(null)}
     >
       {images.map(img => (
         <DraggableImage
