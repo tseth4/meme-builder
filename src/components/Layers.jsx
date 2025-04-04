@@ -15,8 +15,10 @@ const Layers = ({ images, selectedId, onSelect, onMove, onDelete }) => {
           active={img.id === selectedId}
           onClick={() => onSelect(img.id)}
         >
+          {/* <span>{img.zIndex}</span> */}
+          <div></div>
           <LayerPreview style={{ backgroundImage: `url(${img.src})` }} />
-          <span>Layer {img.zIndex}</span>
+          <span>{img.src.split('/').pop().slice(-10)}</span>
           <LayerActions>
             <button onClick={(e) => { e.stopPropagation(); onMove(img.id, 'up'); }}>
               <ArrowUp size={16} />

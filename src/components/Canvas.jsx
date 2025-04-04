@@ -1,6 +1,6 @@
 import DraggableImage from './DraggableImage';
 
-const Canvas = ({ images, onUpdate, changeZIndex }) => {
+const Canvas = ({ images, onUpdate, changeZIndex, onSelect }) => {
   return (
     <div
       style={{
@@ -12,7 +12,13 @@ const Canvas = ({ images, onUpdate, changeZIndex }) => {
       }}
     >
       {images.map(img => (
-        <DraggableImage key={img.id} image={img} onUpdate={onUpdate} changeZIndex={changeZIndex} />
+        <DraggableImage
+          key={img.id}
+          image={img}
+          onUpdate={onUpdate}
+          changeZIndex={changeZIndex}
+          onSelect={onSelect}
+        />
       ))}
     </div>
   );

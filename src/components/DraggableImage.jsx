@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DraggableImage = ({ image, onUpdate, changeZIndex }) => {
+const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
   const { id, src, x, y, width, height, zIndex } = image;
   const [resizing, setResizing] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -8,8 +8,6 @@ const DraggableImage = ({ image, onUpdate, changeZIndex }) => {
   const [resizeDir, setResizeDir] = useState(null);
 
   const offset = useRef({ x: 0, y: 0 });
-
-
 
   const handles = [
     { position: 'top-left', x: -1, y: -1, cursor: 'nwse-resize' },
@@ -77,6 +75,7 @@ const DraggableImage = ({ image, onUpdate, changeZIndex }) => {
 
   const handleDragStart = (e) => {
     // Prevent conflict with resizing
+    onSelect(image.id)
     if (resizing) return;
 
     setDragging(true);
