@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import Canvas from './components/Canvas';
 import sampleImg from './sample.png';
+import LayerPanel from './components/LayerPanel';
 
 function App() {
+  const [selectedId, setSelectedId] = useState(null);
   const [images, setImages] = useState([
     {
       id: 1,
@@ -58,7 +60,27 @@ function App() {
     <div style={{ width: '100vw' }}>
       <button onClick={addImage}>Add Image</button>
       <Canvas images={images} onUpdate={updateImage} changeZIndex={changeZIndex} />
-    </div>
+      <LayerPanel
+        images={images}
+        selectedId={selectedId}
+        onSelect={(id) => setSelectedId(id)}
+        onMove={(id, dir) => {
+          setImages((prev) => {
+            const maxZ = Math.max(...prev.map(i => i.zIndex));
+            return prev.map(img => {
+              if (img.id === id) {
+                let newZ = dir === 'up' ? img.zIndex + 1 : Math.max(1, img.zIndex - 1);
+                return { ...img, zIndex: Math.min(newZ, maxZ + 1) };
+              }
+              return img;
+            });
+          });
+        }}
+        onDelete={(id) => {
+          setImages(prev => prev.filter(img => img.id !== id));
+          if (selectedId === id) setSelectedId(null);
+        }}
+      />    </div>
   );
 }
 
