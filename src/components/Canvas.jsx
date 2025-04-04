@@ -1,8 +1,10 @@
 import DraggableImage from './DraggableImage';
+import { forwardRef } from 'react';
 
-const Canvas = ({ images, onUpdate, changeZIndex, onSelect }) => {
+const Canvas = forwardRef(({ images, onUpdate, changeZIndex, onSelect }, ref) => {
   return (
     <div
+      ref={ref}
       style={{
         position: 'relative',
         width: '100%',
@@ -23,6 +25,6 @@ const Canvas = ({ images, onUpdate, changeZIndex, onSelect }) => {
       ))}
     </div>
   );
-};
+});
 
 export default Canvas;

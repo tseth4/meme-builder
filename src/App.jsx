@@ -4,6 +4,10 @@ import sampleImg from './sample.png';
 import Layers from './components/Layers';
 import ImageUploader from './components/ImageUploader';
 import { reorderLayer } from './utils/reorderLayer';
+import { useRef } from 'react';
+import html2canvas from 'html2canvas';
+
+
 
 import styled from '@emotion/styled'
 
@@ -30,6 +34,8 @@ const SidePanel = styled.div`
 `;
 
 function App() {
+  const canvasRef = useRef(null);
+
   const [selectedId, setSelectedId] = useState(null);
   const [images, setImages] = useState([
     {
@@ -86,6 +92,25 @@ function App() {
     setImages(prev => reorderLayer(prev, id, direction));
   };
 
+  const handleExport = (canvasElement) => {
+    console.log("canv el ", canvasElement)
+    if (!canvasElement) {
+      console.log("no canvas element")
+      return
+    }
+
+    html2canvas(canvasElement, {
+      backgroundColor: null,
+      useCORS: true,
+    }).then((canvas) => {
+      const link = document.createElement('a');
+      link.download = 'your-canvas.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  };
+
+
 
   return (
     <AppContainer>
@@ -94,6 +119,7 @@ function App() {
         onUpdate={updateImage}
         changeZIndex={changeZIndex}
         onSelect={(id) => setSelectedId(id)}
+        ref={canvasRef}
       />
       <SidePanel>
         <Layers
@@ -120,6 +146,8 @@ function App() {
           };
           setImages((prev) => [...prev, newImage]);
         }} />
+        <button onClick={() => handleExport(canvasRef.current)}>Download PNG</button>
+
 
       </SidePanel>
     </AppContainer>
