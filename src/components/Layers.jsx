@@ -1,4 +1,3 @@
-// import './LayerPanel.css';
 import { LayerPanel, LayerItem, LayerPreview, LayerActions } from './LayerPanel.styles';
 import { ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 

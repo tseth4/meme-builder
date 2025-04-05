@@ -1,4 +1,3 @@
-// utils/resizeHandles.js
 export const getHandleStyle = (position) => {
   const base = { position: 'absolute', zIndex: 10 };
 
@@ -15,7 +14,6 @@ export const getHandleStyle = (position) => {
   }
 };
 
-// utils/resizeHandles.js
 export const resizeHandles = [
   { position: 'top-left', x: -1, y: -1, cursor: 'nwse-resize' },
   { position: 'top', x: 0, y: -1, cursor: 'ns-resize' },
