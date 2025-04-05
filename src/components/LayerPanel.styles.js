@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 export const LayerPanel = styled.div`
-  width: 220px;
+  width: 15em;
   background: #1e1e1e;
   color: #fff;
   padding: 12px;
@@ -18,7 +18,7 @@ export const LayerItem = styled.div`
   padding: 8px;
   border: 1px solid ${({ active }) => (active ? '#00f2ff' : '#333')};
   margin-bottom: 6px;
-  cursor: pointer;
+  cursor: pointer;``
   background: ${({ active }) => (active ? '#3a3a3a' : '#2a2a2a')};
   border-left: ${({ active }) => (active ? '3px solid #00f2ff' : 'none')};
   transition: background 0.2s ease;

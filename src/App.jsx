@@ -20,9 +20,7 @@ const AppContainer = styled.div`
   overflow: hidden;
 `;
 const AddImageButton = styled.button`
-  background: black;
   color: white;
-  width: 5em;
   height: auto;
 `;
 
