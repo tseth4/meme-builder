@@ -3,8 +3,8 @@ import { LayerPanel, LayerItem, LayerPreview, LayerActions } from './LayerPanel.
 import { ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
 
 
-const Layers = ({ images, selectedId, onSelect, onMove, onDelete }) => {
-  const sorted = [...images].sort((a, b) => b.zIndex - a.zIndex); // Top to bottom
+const Layers = ({ elements, selectedId, onSelect, onMove, onDelete }) => {
+  const sorted = [...elements].sort((a, b) => b.zIndex - a.zIndex); // Top to bottom
 
   return (
     <LayerPanel>
@@ -18,7 +18,7 @@ const Layers = ({ images, selectedId, onSelect, onMove, onDelete }) => {
           {/* <span>{img.zIndex}</span> */}
           <div></div>
           <LayerPreview style={{ backgroundImage: `url(${img.src})` }} />
-          <span>{img.src.split('/').pop().slice(-10)}</span>
+          {/* <span>{img.src.split('/').pop().slice(-10)}</span> */}
           <LayerActions>
             <button onClick={(e) => { e.stopPropagation(); onMove(img.id, 'up'); }}>
               <ArrowUp size={16} />

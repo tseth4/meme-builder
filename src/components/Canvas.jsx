@@ -1,7 +1,8 @@
 import DraggableImage from './DraggableImage';
+import DraggableText from './DraggableText';
 import { forwardRef } from 'react';
 
-const Canvas = forwardRef(({ images, onUpdate, changeZIndex, onSelect }, ref) => {
+const Canvas = forwardRef(({ elements, onUpdate, changeZIndex, onSelect, selectedId }, ref) => {
   return (
     <div
       ref={ref}
@@ -14,15 +15,30 @@ const Canvas = forwardRef(({ images, onUpdate, changeZIndex, onSelect }, ref) =>
       }}
       onMouseDown={() => onSelect(null)}
     >
-      {images.map(img => (
-        <DraggableImage
-          key={img.id}
-          image={img}
-          onUpdate={onUpdate}
-          changeZIndex={changeZIndex}
-          onSelect={onSelect}
-        />
-      ))}
+      {elements.map(el => {
+        if (el.type === 'image') {
+          return (
+            <DraggableImage
+              key={el.id}
+              image={el}
+              onUpdate={onUpdate}
+              onSelect={onSelect}
+              selectedId={selectedId}
+            />
+          );
+        } else if (el.type === 'text') {
+          return (
+            <DraggableText
+              key={el.id}
+              text={el}
+              onUpdate={onUpdate}
+              onSelect={onSelect}
+              selectedId={selectedId}
+            />
+          );
+        }
+      })}
+
     </div>
   );
 });
