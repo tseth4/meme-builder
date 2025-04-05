@@ -45,7 +45,7 @@ function App() {
     {
       id: 1,
       type: 'image',
-      src: sampleImg,
+      src: '/images/doge.jpg',
       x: 100,
       y: 100,
       width: 200,
