@@ -6,6 +6,7 @@ import ImageUploader from './components/ImageUploader';
 import { reorderLayer } from './utils/reorderLayer';
 import { useRef } from 'react';
 import html2canvas from 'html2canvas';
+import ColorPicker from './components/ColorPicker';
 
 
 
@@ -51,7 +52,7 @@ function App() {
       type: 'text',
       content: 'Top Text',
       fontSize: 32,
-      color: '#fff',
+      color: '#000000',
       x: 150,
       y: 50,
       zIndex: 2,
@@ -142,6 +143,9 @@ function App() {
     setElements(prev => [...prev, newText]);
   };
 
+  const selectedElement = elements.find(el => el.id === selectedId);
+
+
 
   return (
     <AppContainer>
@@ -181,6 +185,14 @@ function App() {
         }} />
         <button onClick={addText}>Add Text</button>
         <button onClick={() => handleExport(canvasRef.current)}>Download PNG</button>
+        {selectedElement?.type === 'text' && (
+          <ColorPicker
+            value={selectedElement.color}
+            onChange={(newColor) => {
+              updateElement(selectedElement.id, { color: newColor });
+            }}
+          />
+        )}
       </SidePanel>
     </AppContainer>
   );
