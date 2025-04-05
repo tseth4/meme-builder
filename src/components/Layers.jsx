@@ -9,24 +9,37 @@ const Layers = ({ elements, selectedId, onSelect, onMove, onDelete }) => {
   return (
     <LayerPanel>
       <h4>Layers</h4>
-      {sorted.map((img) => (
+      {sorted.map((el) => (
         <LayerItem
-          key={img.id}
-          active={img.id === selectedId}
-          onClick={() => onSelect(img.id)}
+          key={el.id}
+          active={el.id === selectedId}
+          onClick={() => onSelect(el.id)}
         >
           {/* <span>{img.zIndex}</span> */}
-          <div></div>
-          <LayerPreview style={{ backgroundImage: `url(${img.src})` }} />
-          {/* <span>{img.src.split('/').pop().slice(-10)}</span> */}
+          {el.type == 'image' ?
+            <>
+              <LayerPreview style={{ backgroundImage: `url(${el.src})` }} />
+              <span>{el.src.split('/').pop().slice(-10)}</span>
+            </>
+
+            :
+            <>
+              <LayerPreview>
+                <span style={{ padding: '0.6em', fontSize: '1.2em', fontWeight: 'bold' }}>T</span>
+              </LayerPreview>
+              <span>{el.content.split('/').pop().slice(0, 10)}</span>
+
+            </>
+          }
+
           <LayerActions>
-            <button onClick={(e) => { e.stopPropagation(); onMove(img.id, 'up'); }}>
+            <button onClick={(e) => { e.stopPropagation(); onMove(el.id, 'up'); }}>
               <ArrowUp size={16} />
             </button>
-            <button onClick={(e) => { e.stopPropagation(); onMove(img.id, 'down'); }}>
+            <button onClick={(e) => { e.stopPropagation(); onMove(el.id, 'down'); }}>
               <ArrowDown size={16} />
             </button>
-            <button onClick={(e) => { e.stopPropagation(); onDelete(img.id); }}>
+            <button onClick={(e) => { e.stopPropagation(); onDelete(el.id); }}>
               <Trash2 size={16} />
             </button>
           </LayerActions>
