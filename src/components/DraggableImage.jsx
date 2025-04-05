@@ -4,7 +4,6 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
   const { id, src, x, y, width, height, zIndex } = image;
   const [resizing, setResizing] = useState(false);
   const [dragging, setDragging] = useState(false);
-
   const [resizeDir, setResizeDir] = useState(null);
 
   const offset = useRef({ x: 0, y: 0 });

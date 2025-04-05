@@ -60,10 +60,12 @@ function App() {
     }
   ]);
 
-  const updateImage = (id, updates) => {
+  const updateElement = (id, updates) => {
+    console.log("updates: ", updates)
     setElements(prev =>
-      prev.map(img => (img.id === id ? { ...img, ...updates } : img))
+      prev.map(el => (el.id === id ? { ...el, ...updates } : el))
     );
+    console.log(elements)
   };
 
   const addImage = () => {
@@ -145,7 +147,7 @@ function App() {
     <AppContainer>
       <Canvas
         elements={elements}
-        onUpdate={updateImage}
+        onUpdate={updateElement}
         changeZIndex={changeZIndex}
         onSelect={(id) => setSelectedId(id)}
         ref={canvasRef}
