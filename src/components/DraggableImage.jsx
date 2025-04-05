@@ -1,14 +1,9 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { resizeHandles, getHandleStyle } from '../utils/resizeHandles';
 import { useTransformable } from '../hooks/useTransformable';
 
 const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
   const { id, src, x, y, width, height, zIndex } = image;
-  // const [resizing, setResizing] = useState(false);
-  // const [dragging, setDragging] = useState(false);
-  // const [resizeDir, setResizeDir] = useState(null);
-
-  const offset = useRef({ x: 0, y: 0 });
 
 
   const {
@@ -33,7 +28,6 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
         zIndex,
         backgroundImage: `url(${src})`,
         backgroundSize: 'cover',
-        // border: '5px solid blue',
         cursor: dragging ? 'grabbing' : 'grab',
       }}
       // sets the initial offset
@@ -50,8 +44,7 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
           }}
         />
       ))}
-      {/* <button onClick={() => changeZIndex(id, 'up')}>Bring Forward</button>
-      <button onClick={() => changeZIndex(id, 'down')}>Send Backward</button> */}
+
 
     </div>
   );
