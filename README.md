@@ -2,4 +2,7 @@
 <!-- - Add resizing for all corners and sides -->
 <!-- - Layering -->
 <!-- - Delete -->
-- Image upload
+<!-- - Image upload -->
+- Font styles
+- Colors
+- Cut image with box onto new layer?
