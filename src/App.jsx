@@ -7,8 +7,7 @@ import { reorderLayer } from './utils/reorderLayer';
 import { useRef } from 'react';
 import html2canvas from 'html2canvas';
 import ColorPicker from './components/ColorPicker';
-
-
+import ImageLibrary from './components/ImageLibrary';
 
 import styled from '@emotion/styled'
 
@@ -34,7 +33,7 @@ const SidePanel = styled.div`
 
 function App() {
   const canvasRef = useRef(null);
-
+  const [showLibrary, setShowLibrary] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [elements, setElements] = useState([
     {
@@ -189,6 +188,66 @@ function App() {
             }}
           />
         )}
+        <button onClick={() => setShowLibrary(prev => !prev)}>
+          Image Library
+        </button>
+
+        {showLibrary && (
+          <ImageLibrary
+            onSelect={(src) => {
+              const img = new Image();
+              img.src = src;
+
+              img.onload = () => {
+                const { naturalWidth, naturalHeight } = img;
+                const maxZ = Math.max(0, ...elements.map(el => el.zIndex));
+
+                // Set max dimension
+                const MAX_SIZE = 300;
+
+                // Calculate scaled dimensions
+                const aspectRatio = naturalWidth / naturalHeight;
+                let width = naturalWidth;
+                let height = naturalHeight;
+
+                if (width > MAX_SIZE || height > MAX_SIZE) {
+                  if (aspectRatio > 1) {
+                    // Wider than tall
+                    width = MAX_SIZE;
+                    height = MAX_SIZE / aspectRatio;
+                  } else {
+                    // Taller than wide
+                    height = MAX_SIZE;
+                    width = MAX_SIZE * aspectRatio;
+                  }
+                }
+
+                setElements((prev) => [
+                  ...prev,
+                  {
+                    id: Date.now(),
+                    type: 'image',
+                    src,
+                    x: 100,
+                    y: 100,
+                    width,
+                    height,
+                    zIndex: maxZ + 1,
+                  },
+                ]);
+              };
+
+
+              img.onerror = () => {
+                console.error('Failed to load image:', src);
+                setShowLibrary(false);
+              };
+            }}
+            onClose={() => setShowLibrary(false)}
+          />
+        )}
+
+
       </SidePanel>
     </AppContainer>
   );

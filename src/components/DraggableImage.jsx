@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { resizeHandles, getHandleStyle } from '../utils/resizeHandles';
 import { useTransformable } from '../hooks/useTransformable';
 
