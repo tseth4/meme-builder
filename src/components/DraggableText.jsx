@@ -31,6 +31,8 @@ const DraggableText = ({ text, onUpdate, onSelect, selectedId }) => {
             setEditing(false);
             onUpdate(text.id, { content: draft });
           }}
+          onMouseDown={(e) => e.stopPropagation()}
+
           style={{
             fontSize: text.fontSize,
             color: text.color,
@@ -84,6 +86,7 @@ const DraggableText = ({ text, onUpdate, onSelect, selectedId }) => {
               userSelect: 'none',
               // textShadow: '2px 2px 4px #000000',
               border: text.id === selectedId ? '1px dashed #00f2ff' : 'none',
+              fontFamily: text.fontFamily || 'Arial',
               padding: '2px 4px',
               boxSizing: 'border-box',
               whiteSpace: 'pre-wrap',

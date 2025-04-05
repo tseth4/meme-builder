@@ -1,4 +1,7 @@
 import React, { useRef } from 'react';
+import { FileUp } from 'lucide-react';
+import { Button } from '../App';
+
 
 const ImageUploader = ({ onUpload }) => {
   const fileInputRef = useRef(null);
@@ -24,9 +27,11 @@ const ImageUploader = ({ onUpload }) => {
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
-      <button onClick={() => fileInputRef.current.click()}>
+      <Button onClick={() => fileInputRef.current.click()}>
+        <FileUp size={16} />
+
         Upload Image
-      </button>
+      </Button>
     </>
   );
 };

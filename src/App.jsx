@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Canvas from './components/Canvas';
 import sampleImg from './sample.png';
 import Layers from './components/Layers';
@@ -8,6 +8,8 @@ import { useRef } from 'react';
 import html2canvas from 'html2canvas';
 import ColorPicker from './components/ColorPicker';
 import ImageLibrary from './components/ImageLibrary';
+import { Plus, Library, Download } from 'lucide-react';
+
 
 import styled from '@emotion/styled'
 
@@ -19,9 +21,13 @@ const AppContainer = styled.div`
   position: relative;
   overflow: hidden;
 `;
-const AddImageButton = styled.button`
+export const Button = styled.button`
   color: white;
   height: auto;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
 `;
 
 const SidePanel = styled.div`
@@ -52,6 +58,7 @@ function App() {
       content: 'Top Text',
       fontSize: 32,
       color: '#000000',
+      fontFamily: 'Arial',
       x: 150,
       y: 50,
       zIndex: 2,
@@ -59,6 +66,8 @@ function App() {
       height: 100,
     }
   ]);
+
+
 
   const updateElement = (id, updates) => {
     setElements(prev =>
@@ -129,6 +138,7 @@ function App() {
       content: 'New Text',
       fontSize: 32,
       color: '#ffffff',
+      fontFamily: 'Arial',
       x: 100,
       y: 100,
       zIndex: maxZ + 1,
@@ -139,6 +149,10 @@ function App() {
   };
 
   const selectedElement = elements.find(el => el.id === selectedId);
+
+  // useEffect(() => {
+  //   console.log("selectedElement: ", selectedElement)
+  // }, [selectedElement])
 
 
 
@@ -163,7 +177,7 @@ function App() {
             if (selectedId === id) setSelectedId(null);
           }}
         />
-        <AddImageButton onClick={addImage}>Add</AddImageButton>
+        {/* <Button onClick={addImage}>Add</Button> */}
         <ImageUploader onUpload={(src) => {
           const maxZ = Math.max(0, ...elements.map(img => img.zIndex));
           const newImage = {
@@ -178,19 +192,20 @@ function App() {
           };
           setElements((prev) => [...prev, newImage]);
         }} />
-        <button onClick={addText}>Add Text</button>
-        <button onClick={() => handleExport(canvasRef.current)}>Download PNG</button>
-        {selectedElement?.type === 'text' && (
-          <ColorPicker
-            value={selectedElement.color}
-            onChange={(newColor) => {
-              updateElement(selectedElement.id, { color: newColor });
-            }}
-          />
-        )}
-        <button onClick={() => setShowLibrary(prev => !prev)}>
+        <Button onClick={addText}>
+          <Plus size={16} />
+          Add Text
+        </Button>
+        <Button onClick={() => setShowLibrary(prev => !prev)}>
+          <Library size={16} />
           Image Library
-        </button>
+        </Button>
+        <Button onClick={() => handleExport(canvasRef.current)}>
+          <Download size={16} />
+          Download PNG
+        </Button>
+
+
 
         {showLibrary && (
           <ImageLibrary
@@ -247,7 +262,38 @@ function App() {
           />
         )}
 
+        {selectedElement?.type === 'text' && (
+          <>
+            <ColorPicker
+              value={selectedElement.color}
+              onChange={(newColor) => {
+                updateElement(selectedElement.id, { color: newColor });
+              }}
+            />
+            <select
+              value={selectedElement.fontSize}
+              onChange={(e) => updateElement(selectedElement.id, { fontSize: parseInt(e.target.value) })}
+            >
+              {[12, 16, 20, 24, 32, 40, 48, 64].map(size => (
+                <option key={size} value={size}>{size}px</option>
+              ))}
+            </select>
+            <select
+              value={selectedElement.fontFamily || 'Arial'}
+              onChange={(e) => updateElement(selectedElement.id, { fontFamily: e.target.value })}
+            >
+              <option value="Arial">Arial</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Impact">Impact</option>
+              <option value="Comic Sans MS">Comic Sans MS</option>
+            </select>
 
+
+          </>
+
+
+        )}
       </SidePanel>
     </AppContainer>
   );
