@@ -67,7 +67,6 @@ const DraggableText = ({ text, onUpdate, onSelect, selectedId }) => {
           <div
             onMouseDown={startDrag}
             onDoubleClick={(e) => {
-              console.log("double clicked")
               e.stopPropagation();
               setEditing(true);
               setDraft(content);

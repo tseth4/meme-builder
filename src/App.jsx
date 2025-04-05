@@ -62,11 +62,9 @@ function App() {
   ]);
 
   const updateElement = (id, updates) => {
-    console.log("updates: ", updates)
     setElements(prev =>
       prev.map(el => (el.id === id ? { ...el, ...updates } : el))
     );
-    console.log(elements)
   };
 
   const addImage = () => {
@@ -108,9 +106,7 @@ function App() {
   };
 
   const handleExport = (canvasElement) => {
-    console.log("canv el ", canvasElement)
     if (!canvasElement) {
-      console.log("no canvas element")
       return
     }
 
