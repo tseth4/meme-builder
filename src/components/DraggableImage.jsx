@@ -9,6 +9,10 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
 
   const offset = useRef({ x: 0, y: 0 });
 
+  // handle mappings
+  // x: -1, Horizontal direction (-1 = left, 1 = right, 0 = center)
+  // y: -1, Vertical direction (-1 = up, 1 = down, 0 = center)
+  // cursor: what the cursor should look like
   const handles = [
     { position: 'top-left', x: -1, y: -1, cursor: 'nwse-resize' },
     { position: 'top', x: 0, y: -1, cursor: 'ns-resize' },
@@ -22,15 +26,20 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
 
   useEffect(() => {
     const handleMouseMove = (e) => {
+      // if resizing and the direction is set
       if (resizing && resizeDir) {
+        // get deltas (current mouse pos - initial mouse pos)
         const dx = e.clientX - offset.current.x;
         const dy = e.clientY - offset.current.y;
 
+        // initial top left corner of image
         let newX = x;
         let newY = y;
+        // initial width and height
         let newW = width;
         let newH = height;
 
+        // based on which direction we are either subtracting or adding
         if (resizeDir.x === -1) {
           newX += dx;
           newW -= dx;
@@ -57,13 +66,16 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
       }
     };
 
+    // handle mouse click let go
     const handleMouseUp = () => {
       setDragging(false);
       setResizing(false);
       setResizeDir(null);
     };
 
+    // listener calls handleMouseMove when mouse moves
     window.addEventListener('mousemove', handleMouseMove);
+    // calls handleMouse up  which sets the dragging and resize state to False
     window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
@@ -76,7 +88,9 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
   const handleDragStart = (e) => {
     // Prevent conflict with resizing
     e.stopPropagation();
+    // set selected element
     onSelect(image.id)
+    // if we are resizing break out
     if (resizing) return;
 
     setDragging(true);
@@ -88,8 +102,13 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
 
   const handleResizeStart = (e, handleInfo) => {
     e.stopPropagation();
+    // THESE TWO will trigger the useEffect
+    // set resize state
     setResizing(true);
+    // set resize direction to the handle x and y
     setResizeDir({ x: handleInfo.x, y: handleInfo.y });
+
+    // set offset to the current mouse coords
     offset.current = {
       x: e.clientX,
       y: e.clientY,
@@ -192,19 +211,20 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
         zIndex,
         backgroundImage: `url(${src})`,
         backgroundSize: 'cover',
-        border: '1px solid #ccc',
+        // border: '5px solid blue',
         cursor: dragging ? 'grabbing' : 'grab',
       }}
       // sets the initial offset
       onMouseDown={handleDragStart}
     >
-      {handles.map((h) => (
+      {handles.map((handle) => (
         <div
-          key={h.position}
-          onMouseDown={(e) => handleResizeStart(e, h)}
+          key={handle.position}
+          onMouseDown={(e) => handleResizeStart(e, handle)}
           style={{
+            // border: '5px solid pink',
             background: 'rgba(0,0,0,0)', // transparent, or add hover if you want
-            ...getHandleStyle(h.position),
+            ...getHandleStyle(handle.position),
           }}
         />
       ))}

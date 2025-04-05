@@ -55,6 +55,8 @@ function App() {
       x: 150,
       y: 50,
       zIndex: 2,
+      width: 200,
+      height: 100,
     }
   ]);
 
@@ -132,10 +134,12 @@ function App() {
       x: 100,
       y: 100,
       zIndex: maxZ + 1,
+      width: 200,
+      height: 100,
     };
     setElements(prev => [...prev, newText]);
   };
-  
+
 
   return (
     <AppContainer>
