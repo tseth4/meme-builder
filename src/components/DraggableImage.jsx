@@ -18,6 +18,7 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
 
   return (
     <div
+      data-exportable="true"
       style={{
         position: 'absolute',
         left: x,

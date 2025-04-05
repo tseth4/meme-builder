@@ -114,20 +114,47 @@ function App() {
   };
 
   const handleExport = (canvasElement) => {
-    if (!canvasElement) {
-      return
-    }
+    if (!canvasElement) return;
+
+    const PADDING = 10;
+    const nodeList = canvasElement.querySelectorAll('[data-exportable="true"]');
+
+    if (nodeList.length === 0) return;
+
+    const rects = Array.from(nodeList).map(node => node.getBoundingClientRect());
+
+    const minX = Math.max(0, Math.min(...rects.map(r => r.left)) - PADDING);
+    const minY = Math.max(0, Math.min(...rects.map(r => r.top)) - PADDING);
+    const maxX = Math.max(...rects.map(r => r.right)) + PADDING;
+    const maxY = Math.max(...rects.map(r => r.bottom)) + PADDING;
+
+    const cropWidth = maxX - minX;
+    const cropHeight = maxY - minY;
 
     html2canvas(canvasElement, {
       backgroundColor: null,
       useCORS: true,
-    }).then((canvas) => {
+    }).then((fullCanvas) => {
+      const croppedCanvas = document.createElement('canvas');
+      croppedCanvas.width = cropWidth;
+      croppedCanvas.height = cropHeight;
+
+      const ctx = croppedCanvas.getContext('2d');
+
+      ctx.drawImage(
+        fullCanvas,
+        minX, minY, cropWidth, cropHeight,
+        0, 0, cropWidth, cropHeight
+      );
+
       const link = document.createElement('a');
-      link.download = 'your-canvas.png';
-      link.href = canvas.toDataURL('image/png');
+      link.download = 'cropped-image.png';
+      link.href = croppedCanvas.toDataURL('image/png');
       link.click();
     });
   };
+
+
 
   const addText = () => {
     const id = Date.now();

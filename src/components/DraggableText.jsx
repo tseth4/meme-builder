@@ -21,7 +21,7 @@ const DraggableText = ({ text, onUpdate, onSelect, selectedId }) => {
 
 
   return (
-    <>
+    <div data-exportable="true">
       {editing ? (
         <textarea
           ref={inputRef}
@@ -114,7 +114,7 @@ const DraggableText = ({ text, onUpdate, onSelect, selectedId }) => {
 
       )}
 
-    </>
+    </div>
   );
 };
 
