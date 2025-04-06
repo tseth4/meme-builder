@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Canvas from './components/Canvas';
 import sampleImg from './sample.png';
 import Layers from './components/Layers';
