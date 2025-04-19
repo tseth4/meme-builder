@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Canvas from './components/Canvas';
 import sampleImg from './sample.png';
 import Layers from './components/Layers';
@@ -60,7 +60,7 @@ function App() {
   const [isEditingCanvas, setIsEditingCanvas] = useState(false);
 
   const [canvasSize, setCanvasSize] = useState({
-    width: 600, height: 600
+    width: 600, height: 600, x: 0, y: 0
   })
   const [elements, setElements] = useState([
     {
@@ -87,6 +87,17 @@ function App() {
       height: 100,
     }
   ]);
+
+  useEffect(() => {
+    const centerX = (window.innerWidth - canvasSize.width) / 2;
+    const centerY = (window.innerHeight - canvasSize.height) / 2;
+
+    setCanvasSize((prev) => ({
+      ...prev,
+      x: centerX,
+      y: centerY,
+    }));
+  }, []);
 
 
 
@@ -140,7 +151,7 @@ function App() {
     html2canvas(canvasRef.current, {
       backgroundColor: '#fff', // or null for transparent
       useCORS: true,
-      scale: 2, // higher resolution output
+      scale: 4, // higher resolution output
     }).then((canvas) => {
       const link = document.createElement('a');
       link.download = 'meme.png';

@@ -4,14 +4,12 @@ import { forwardRef, useRef, useState, useEffect } from 'react';
 // import { useTransformable } from '../hooks/useTransformable';
 import { resizeHandles, getHandleStyle } from '../utils/resizeHandles';
 
-const Canvas = forwardRef(({ elements, onUpdate, changeZIndex, onSelect, selectedId, canvasSize, setCanvasSize, isEditingCanvas }, ref) => {
+const Canvas = forwardRef(({ elements, onUpdate, onSelect, selectedId, canvasSize, setCanvasSize, isEditingCanvas }, ref) => {
 
   const offset = useRef({ x: 0, y: 0 });
-  const [resizeDir, setResizeDir] = useState(null);
 
   const startCanvasResize = (e, dir) => {
     e.stopPropagation();
-    setResizeDir({ x: dir.x, y: dir.y });
     offset.current = { x: e.clientX, y: e.clientY };
 
     const handleMouseMove = (e) => {
@@ -19,16 +17,28 @@ const Canvas = forwardRef(({ elements, onUpdate, changeZIndex, onSelect, selecte
       const dy = e.clientY - offset.current.y;
 
       setCanvasSize(prev => {
+        let newX = prev.x || 0;
+        let newY = prev.y || 0;
         let newW = prev.width;
         let newH = prev.height;
 
-        if (dir.x === 1) newW += dx;
-        else if (dir.x === -1) newW -= dx;
+        if (dir.x === -1) {
+          newX += dx;
+          newW -= dx;
+        } else if (dir.x === 1) {
+          newW += dx;
+        }
 
-        if (dir.y === 1) newH += dy;
-        else if (dir.y === -1) newH -= dy;
+        if (dir.y === -1) {
+          newY += dy;
+          newH -= dy;
+        } else if (dir.y === 1) {
+          newH += dy;
+        }
 
         return {
+          x: newX,
+          y: newY,
           width: Math.max(100, newW),
           height: Math.max(100, newH),
         };
@@ -38,7 +48,6 @@ const Canvas = forwardRef(({ elements, onUpdate, changeZIndex, onSelect, selecte
     };
 
     const handleMouseUp = () => {
-      setResizeDir(null);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
@@ -53,7 +62,9 @@ const Canvas = forwardRef(({ elements, onUpdate, changeZIndex, onSelect, selecte
     <div
       ref={ref}
       style={{
-        position: 'relative',
+        position: 'absolute',
+        left: canvasSize.x || 0,
+        top: canvasSize.y || 0,
         width: `${canvasSize.width}px`,
         height: `${canvasSize.height}px`,
         background: '#f4f4f4',
