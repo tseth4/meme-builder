@@ -14,11 +14,10 @@ import { Plus, Library, Download } from 'lucide-react';
 import styled from '@emotion/styled'
 
 const AppContainer = styled.div`
-  background: #333;
-  color: #fff;
-  width: 100vw;
   display: flex;
-  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #333;
   overflow: hidden;
 `;
 export const Button = styled.button`
@@ -31,16 +30,38 @@ export const Button = styled.button`
 `;
 
 const SidePanel = styled.div`
+  width: 260px;          
+  flex-shrink: 0;        
+  background: #1e1e1e;
+  color: white;
+  padding: 1em;
   display: flex;
   flex-direction: column;
   gap: 1em;
-  padding: 1em;
+  z-index: 10;          
 `;
+
+const CanvasWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: auto; 
+  background:rgb(49, 49, 49);
+
+`;
+
 
 function App() {
   const canvasRef = useRef(null);
   const [showLibrary, setShowLibrary] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [isEditingCanvas, setIsEditingCanvas] = useState(false);
+
+  const [canvasSize, setCanvasSize] = useState({
+    width: 600, height: 600
+  })
   const [elements, setElements] = useState([
     {
       id: 1,
@@ -114,42 +135,16 @@ function App() {
   };
 
   const handleExport = (canvasElement) => {
-    if (!canvasElement) return;
+    if (!canvasRef.current) return;
 
-    const PADDING = 10;
-    const nodeList = canvasElement.querySelectorAll('[data-exportable="true"]');
-
-    if (nodeList.length === 0) return;
-
-    const rects = Array.from(nodeList).map(node => node.getBoundingClientRect());
-
-    const minX = Math.max(0, Math.min(...rects.map(r => r.left)) - PADDING);
-    const minY = Math.max(0, Math.min(...rects.map(r => r.top)) - PADDING);
-    const maxX = Math.max(...rects.map(r => r.right)) + PADDING;
-    const maxY = Math.max(...rects.map(r => r.bottom)) + PADDING;
-
-    const cropWidth = maxX - minX;
-    const cropHeight = maxY - minY;
-
-    html2canvas(canvasElement, {
-      backgroundColor: null,
+    html2canvas(canvasRef.current, {
+      backgroundColor: '#fff', // or null for transparent
       useCORS: true,
-    }).then((fullCanvas) => {
-      const croppedCanvas = document.createElement('canvas');
-      croppedCanvas.width = cropWidth;
-      croppedCanvas.height = cropHeight;
-
-      const ctx = croppedCanvas.getContext('2d');
-
-      ctx.drawImage(
-        fullCanvas,
-        minX, minY, cropWidth, cropHeight,
-        0, 0, cropWidth, cropHeight
-      );
-
+      scale: 2, // higher resolution output
+    }).then((canvas) => {
       const link = document.createElement('a');
-      link.download = 'cropped-image.png';
-      link.href = croppedCanvas.toDataURL('image/png');
+      link.download = 'meme.png';
+      link.href = canvas.toDataURL('image/png');
       link.click();
     });
   };
@@ -177,23 +172,30 @@ function App() {
 
   const selectedElement = elements.find(el => el.id === selectedId);
 
-  // useEffect(() => {
-  //   console.log("selectedElement: ", selectedElement)
-  // }, [selectedElement])
-
-
 
   return (
     <AppContainer>
-      <Canvas
-        elements={elements}
-        onUpdate={updateElement}
-        changeZIndex={changeZIndex}
-        onSelect={(id) => setSelectedId(id)}
-        ref={canvasRef}
-        selectedId={selectedId}
-      />
+      <CanvasWrapper>
+
+        <Canvas
+          elements={elements}
+          onUpdate={updateElement}
+          changeZIndex={changeZIndex}
+          onSelect={(id) => setSelectedId(id)}
+          ref={canvasRef}
+          selectedId={selectedId}
+          canvasSize={canvasSize}
+          setCanvasSize={setCanvasSize}
+          isEditingCanvas={isEditingCanvas}
+        // canvasWidth={null}
+        // canvasHeight={null}
+        />
+      </CanvasWrapper>
+
       <SidePanel>
+        <Button onClick={() => setIsEditingCanvas(prev => !prev)}>
+          {isEditingCanvas ? 'Stop Editing Canvas' : 'Edit Canvas'}
+        </Button>
         <Layers
           elements={elements}
           selectedId={selectedId}
@@ -204,7 +206,6 @@ function App() {
             if (selectedId === id) setSelectedId(null);
           }}
         />
-        {/* <Button onClick={addImage}>Add</Button> */}
         <ImageUploader onUpload={(src) => {
           const maxZ = Math.max(0, ...elements.map(img => img.zIndex));
           const newImage = {

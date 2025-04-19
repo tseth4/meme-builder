@@ -1,7 +1,7 @@
 import { resizeHandles, getHandleStyle } from '../utils/resizeHandles';
 import { useTransformable } from '../hooks/useTransformable';
 
-const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
+const DraggableImage = ({ image, onUpdate, onSelect }) => {
   const { id, src, x, y, width, height, zIndex } = image;
 
 
@@ -38,8 +38,7 @@ const DraggableImage = ({ image, onUpdate, changeZIndex, onSelect }) => {
           key={handle.position}
           onMouseDown={(e) => startResize(e, handle)}
           style={{
-            // border: '5px solid pink',
-            background: 'rgba(0,0,0,0)', // transparent, or add hover if you want
+            background: 'rgba(0,0,0,0)', 
             ...getHandleStyle(handle.position),
           }}
         />

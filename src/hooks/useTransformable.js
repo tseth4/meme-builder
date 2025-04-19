@@ -58,9 +58,16 @@ export function useTransformable({ id, initial, onUpdate, onSelect }) {
 
   const startDrag = (e) => {
     e.stopPropagation();
+    // setting selected id
     onSelect(id);
+    // if were resizing breakout
     if (resizing) return;
+    // set dragging to true
     setDragging(true);
+    // Set the initial offset: the distance between the mouse position and the element’s top-left corner
+    // Example: image at (100, 100), mouse clicks at (150, 120) => offset = (50, 20)
+    // As the mouse moves, we subtract this offset from the current mouse position
+    // to calculate the new top-left position of the element — keeping the grab point consistent
     offset.current = {
       x: e.clientX - initial.x,
       y: e.clientY - initial.y,

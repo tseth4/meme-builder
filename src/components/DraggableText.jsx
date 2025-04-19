@@ -21,9 +21,11 @@ const DraggableText = ({ text, onUpdate, onSelect, selectedId }) => {
 
 
   return (
-    <div data-exportable="true">
+    <div >
       {editing ? (
         <textarea
+          hello="world"
+          data-exportable="true"
           ref={inputRef}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
@@ -43,7 +45,8 @@ const DraggableText = ({ text, onUpdate, onSelect, selectedId }) => {
             zIndex: text.zIndex,
             padding: '4px 6px',
             background: 'transparent',
-            border: '2px solid black',
+            // border: '2px solid black',
+            border: '2px solid purple',
             // textShadow: '2px 2px 4px #000000',
             outline: 'none',
             resize: 'none',
@@ -57,6 +60,7 @@ const DraggableText = ({ text, onUpdate, onSelect, selectedId }) => {
         />
       ) : (
         <div
+          data-exportable="true"
           style={{
             position: 'absolute',
             left: text.x,
