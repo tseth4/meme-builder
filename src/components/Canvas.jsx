@@ -74,6 +74,8 @@ const Canvas = forwardRef(({ elements, onUpdate, onSelect, selectedId, canvasSiz
         marginTop: 0,
         marginBottom: 0,
         border: isEditingCanvas ? '1px dashed #00f2ff' : 'none',
+        margin: '2rem',
+
       }}
       onMouseDown={() => onSelect(null)}
     >

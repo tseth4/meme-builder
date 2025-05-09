@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Canvas from './components/Canvas';
-import sampleImg from './sample.png';
 import Layers from './components/Layers';
 import ImageUploader from './components/ImageUploader';
 import { reorderLayer } from './utils/reorderLayer';
@@ -8,17 +7,24 @@ import { useRef } from 'react';
 import html2canvas from 'html2canvas';
 import ColorPicker from './components/ColorPicker';
 import ImageLibrary from './components/ImageLibrary';
-import { Plus, Library, Download } from 'lucide-react';
+import { Plus, Library, Download, EditIcon } from 'lucide-react';
 
 
 import styled from '@emotion/styled'
 
+
 const AppContainer = styled.div`
+
   display: flex;
+  flex-direction: row;
   width: 100vw;
   height: 100vh;
   background: #333;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 export const Button = styled.button`
   color: white;
@@ -30,16 +36,64 @@ export const Button = styled.button`
 `;
 
 const SidePanel = styled.div`
-  width: 260px;          
-  flex-shrink: 0;        
+  width: 260px;
+  flex-shrink: 0;
   background: #1e1e1e;
   color: white;
   padding: 1em;
   display: flex;
   flex-direction: column;
   gap: 1em;
-  z-index: 10;          
+  z-index: 10;
+  overflow-y: auto;
+
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 300px;
+    flex-direction: column;
+    padding: 0.5em;
+    gap: 0.5em;
+  }   
 `;
+
+const ButtonRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  justify-content: space-around;
+
+  @media (min-width: 769px) {
+    flex-direction: column;
+  }
+`;
+
+const IconButton = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  padding: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25em;
+  cursor: pointer;
+
+  &:hover {
+    color: #00f2ff;
+  }
+
+  @media (min-width: 769px) {
+    justify-content: flex-start;
+    gap: 0.5em;
+
+    &::after {
+      content: attr(title);
+      font-size: 0.9em;
+    }
+  }
+`;
+
 
 const CanvasWrapper = styled.div`
   flex: 1;
@@ -49,8 +103,16 @@ const CanvasWrapper = styled.div`
   position: relative;
   overflow: auto; 
   background:rgb(49, 49, 49);
+  padding: 1rem;
+
+
+  @media (max-width: 768px) {
+    height: calc(100vh - 300px); /* match SidePanel height */
+  }
 
 `;
+
+// TODO: Refreshing on mobile loads the canvas to far to the right and left. Canvas is going off the screen making it difficult to resize.
 
 
 function App() {
@@ -89,14 +151,25 @@ function App() {
   ]);
 
   useEffect(() => {
-    const centerX = (window.innerWidth - canvasSize.width) / 2;
-    const centerY = (window.innerHeight - canvasSize.height) / 2;
+    const resizeCanvas = () => {
+      const padding = 40;
+      const maxWidth = window.innerWidth - padding;
+      const maxHeight = window.innerHeight - (window.innerWidth < 768 ? 300 : padding); // account for mobile bottom panel
 
-    setCanvasSize((prev) => ({
-      ...prev,
-      x: centerX,
-      y: centerY,
-    }));
+      const size = Math.min(maxWidth, maxHeight, 600); // max default canvas
+
+      setCanvasSize({
+        width: size,
+        height: size,
+        x: 0, // no longer used
+        y: 0,
+      });
+    };
+
+    resizeCanvas();
+
+    window.addEventListener('resize', resizeCanvas);
+    return () => window.removeEventListener('resize', resizeCanvas);
   }, []);
 
 
@@ -107,23 +180,6 @@ function App() {
     );
   };
 
-  const addImage = () => {
-    const id = Date.now();
-    const maxZ = Math.max(0, ...elements.map(img => img.zIndex));
-    setElements(prev => [
-      ...prev,
-      {
-        id,
-        type: 'image',
-        src: sampleImg,
-        x: 50,
-        y: 50,
-        width: 200,
-        height: 200,
-        zIndex: maxZ + 1,
-      },
-    ]);
-  };
 
   const changeZIndex = (id, direction) => {
     setElements(prev =>
@@ -231,7 +287,7 @@ function App() {
           };
           setElements((prev) => [...prev, newImage]);
         }} />
-        <Button onClick={addText}>
+        {/* <Button onClick={addText}>
           <Plus size={16} />
           Add Text
         </Button>
@@ -242,7 +298,21 @@ function App() {
         <Button onClick={() => handleExport(canvasRef.current)}>
           <Download size={16} />
           Download PNG
-        </Button>
+        </Button> */}
+        <ButtonRow>
+          <IconButton onClick={() => setIsEditingCanvas(prev => !prev)} title="Edit Canvas">
+            <EditIcon />
+          </IconButton>
+          <IconButton onClick={addText} title="Add Text">
+            <Plus size={16} />
+          </IconButton>
+          <IconButton onClick={() => setShowLibrary(prev => !prev)} title="Image Library">
+            <Library size={16} />
+          </IconButton>
+          <IconButton onClick={() => handleExport(canvasRef.current)} title="Download">
+            <Download size={16} />
+          </IconButton>
+        </ButtonRow>
 
 
 
